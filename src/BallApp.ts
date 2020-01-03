@@ -71,6 +71,7 @@ export default class BallApp {
 
 	private mouseDown(event: MouseEvent): void {
 		if (event.button === 0) {
+			event.preventDefault();
 			this.balls.push(new Ball(this.mouse, this.balls.length));
 		}
 	}
