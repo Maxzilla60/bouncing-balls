@@ -77,7 +77,6 @@ function loop() {
 
 			fx = (isNaN(fx) ? 0 : fx);
 			fy = (isNaN(fy) ? 0 : fy);
-			console.log(fx);
 			// Calculating the acceleration of the ball
 			// F = ma or a = F/m
 			var ax = fx / balls[i].mass;
