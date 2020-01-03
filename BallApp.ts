@@ -36,7 +36,6 @@ export default class BallApp {
 	private readonly gravityElement: HTMLInputElement;
 	private readonly densityElement: HTMLInputElement;
 	private readonly dragElement: HTMLInputElement;
-	private timerID: number;
 	private mouse: Mouse;
 	private balls: Array<Ball> = [];
 
@@ -52,7 +51,7 @@ export default class BallApp {
 		this.mouse = new Mouse(this.canvas);
 		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
 		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
-		this.timerID = setInterval(this.loop.bind(this), TIMER_SPEED);
+		setInterval(this.loop.bind(this), TIMER_SPEED);
 	}
 
 	private loop(): void {
