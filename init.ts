@@ -22,6 +22,20 @@ class Ball {
 	constructor(position: Point) {
 		this.position = { ...position };
 	}
+
+	public tick(drag: number, density: number, gravity: number): void {
+		const fx = getAerodynamicForce(drag, density, this.area, this.velocity.x);
+		const fy = getAerodynamicForce(drag, density, this.area, this.velocity.y);
+
+		const ax = getAccelerationX(fx, this.mass);
+		const ay = getAccelerationY(fy, this.mass, gravity);
+
+		this.velocity.x += ax * FPS;
+		this.velocity.y += ay * FPS;
+
+		this.position.x += this.velocity.x * FPS * 100;
+		this.position.y += this.velocity.y * FPS * 100;
+	}
 }
 
 class Mouse extends Point {
@@ -65,28 +79,26 @@ export default class BallApp {
 		for (let i = 0; i < this.balls.length; i++) {
 			const ball = this.balls[i];
 			if (!this.mouse.isDown || i < this.balls.length - 1) {
-				const fx = this.getAerodynamicForce(this.drag, this.density, ball.area, ball.velocity.x);
-				const fy = this.getAerodynamicForce(this.drag, this.density, ball.area, ball.velocity.y);
-
-				const ax = this.getAccelerationX(fx, ball.mass);
-				const ay = this.getAccelerationY(fy, ball.mass, this.gravity);
-
-				ball.velocity.x += ax * FPS;
-				ball.velocity.y += ay * FPS;
-
-				ball.position.x += ball.velocity.x * FPS * 100;
-				ball.position.y += ball.velocity.y * FPS * 100;
+				ball.tick(this.drag, this.density, this.gravity);
 			}
 
-			this.renderBall(ball);
-			if (this.mouse.isDown) {
-				this.renderSlingshot();
-			}
-			this.collisionBall(ball);
+			this.collisionOtherBalls(ball);
 			this.collisionWall(ball);
 		}
 
+		this.render();
+	}
+
+	private render(): void {
+		this.renderBalls();
+		if (this.mouse.isDown) {
+			this.renderSlingshot();
+		}
 		this.renderInfo();
+	}
+
+	private renderBalls(): void {
+		this.balls.forEach(this.renderBall.bind(this));
 	}
 
 	private renderInfo(): void {
@@ -99,7 +111,7 @@ export default class BallApp {
 		this.ctx.fillText(`Mouse: ${this.mouse.isDown}`, 0, 80);
 	}
 
-	private collisionBall(ball: Ball): void {
+	private collisionOtherBalls(ball: Ball): void {
 		for (let i = 0; i < this.balls.length; i++) {
 			const otherBall = this.balls[i];
 			if (ball.position.x !== otherBall.position.x && ball.position.y !== otherBall.position.y) {
@@ -180,20 +192,6 @@ export default class BallApp {
 		this.ctx.closePath();
 	}
 
-	private getAccelerationX(fx: number, ballMass: number): number {
-		return fx / ballMass;
-	}
-
-	private getAccelerationY(fy: number, mass: number, gravity: number): number {
-		return (GRAVITY_ACCELERATION * gravity) + (fy / mass);
-	}
-
-	private getAerodynamicForce(drag: number, density: number, area: number, velocity: number): number {
-		const rho = (velocity / Math.abs(velocity));
-		const result = -0.5 * drag * density * area * velocity * velocity * rho;
-		return isNaN(result) ? 0 : result;
-	}
-
 	private mouseDown(event: MouseEvent): void {
 		if (event.button === 0) {
 			this.setMousePositionForEvent(event);
@@ -230,6 +228,18 @@ export default class BallApp {
 	private get height(): number {
 		return this.canvas.height;
 	}
+}
+
+function getAerodynamicForce(drag: number, density: number, area: number, velocity: number): number {
+	const rho = (velocity / Math.abs(velocity));
+	const result = -0.5 * drag * density * area * velocity * velocity * rho;
+	return isNaN(result) ? 0 : result;
+}
+function getAccelerationX(fx: number, ballMass: number): number {
+	return fx / ballMass;
+}
+function getAccelerationY(fy: number, mass: number, gravity: number): number {
+	return (GRAVITY_ACCELERATION * gravity) + (fy / mass);
 }
 
 const app = new BallApp();
