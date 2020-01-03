@@ -126,7 +126,7 @@ export default class BallApp {
 		this.ctx.fillText(`Fluid Density: ${this.density} kg/m^3`, 5, 32);
 		this.ctx.fillText(`Acceleration: ${this.gravity * GRAVITY_ACCELERATION} g`, 5, 48);
 		this.ctx.fillText(`Drag Coefficient: ${this.drag}`, 5, 64);
-		this.ctx.fillText(`Mouse: ${this.mouse}`, 5, 80);
+		// this.ctx.fillText(`Mouse: ${this.mouse}`, 5, 80);
 	}
 
 	private get lastBall(): Ball {

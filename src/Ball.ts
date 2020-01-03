@@ -4,7 +4,7 @@ import Point from './Point';
 
 export default class Ball {
 	public readonly id: number;
-	public readonly radius = 10;
+	public readonly radius = 14;
 	public readonly color = Ball.randomColor();
 	public readonly mass = 10;
 	public velocity: Point = { x: 0, y: 0 };
