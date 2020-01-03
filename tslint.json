@@ -65,6 +65,7 @@
 			"as-needed"
 		],
 		"object-literal-sort-keys": false,
+		"only-arrow-functions": false,
 		"ordered-imports": false,
 		"quotemark": [
 			true,
