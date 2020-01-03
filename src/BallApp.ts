@@ -1,5 +1,5 @@
-import { GRAVITY_ACCELERATION, TIMER_SPEED } from './config';
 import Ball from './Ball';
+import { GRAVITY_ACCELERATION, TIMER_SPEED } from './config';
 import Point from './Point';
 
 class Mouse extends Point {
@@ -33,11 +33,13 @@ class Mouse extends Point {
 export default class BallApp {
 	private readonly canvas: HTMLCanvasElement;
 	private readonly ctx: CanvasRenderingContext2D;
+
 	private readonly gravityElement: HTMLInputElement;
 	private readonly densityElement: HTMLInputElement;
 	private readonly dragElement: HTMLInputElement;
+
+	private readonly balls: Array<Ball> = [];
 	private mouse: Mouse;
-	private balls: Array<Ball> = [];
 
 	public constructor() {
 		this.canvas = document.getElementById('canvas') as HTMLCanvasElement;

@@ -54,43 +54,44 @@ export default class Ball {
 
 	public collisionOtherBalls(otherBalls: Array<Ball>): void {
 		for (const otherBall of otherBalls) {
-			if (this.id !== otherBall.id && !this.samePositionAs(otherBall)) {
-				// quick check for potential collisions using AABBs
-				if (this.position.x + this.radius + otherBall.radius > otherBall.position.x
-					&& this.position.x < otherBall.position.x + this.radius + otherBall.radius
-					&& this.position.y + this.radius + otherBall.radius > otherBall.position.y
-					&& this.position.y < otherBall.position.y + this.radius + otherBall.radius) {
+			if (this.id !== otherBall.id && !this.samePositionAs(otherBall) && this.collidesWith(otherBall)) {
+				// Pythagoras
+				const distX = this.position.x - otherBall.position.x;
+				const distY = this.position.y - otherBall.position.y;
+				const d = Math.sqrt((distX) * (distX) + (distY) * (distY));
 
-					// pythagoras
-					const distX = this.position.x - otherBall.position.x;
-					const distY = this.position.y - otherBall.position.y;
-					const d = Math.sqrt((distX) * (distX) + (distY) * (distY));
+				// Checking circle collision
+				if (d < this.radius + otherBall.radius) {
+					const nx = (otherBall.position.x - this.position.x) / d;
+					const ny = (otherBall.position.y - this.position.y) / d;
+					const p = 2 * (this.velocity.x * nx + this.velocity.y * ny - otherBall.velocity.x * nx - otherBall.velocity.y * ny) / (this.mass + otherBall.mass);
 
-					// checking circle vs circle collision
-					if (d < this.radius + otherBall.radius) {
-						const nx = (otherBall.position.x - this.position.x) / d;
-						const ny = (otherBall.position.y - this.position.y) / d;
-						const p = 2 * (this.velocity.x * nx + this.velocity.y * ny - otherBall.velocity.x * nx - otherBall.velocity.y * ny) / (this.mass + otherBall.mass);
+					// The point of collision
+					const colPointX = ((this.position.x * otherBall.radius) + (otherBall.position.x * this.radius)) / (this.radius + otherBall.radius);
+					const colPointY = ((this.position.y * otherBall.radius) + (otherBall.position.y * this.radius)) / (this.radius + otherBall.radius);
 
-						// calculating the point of collision
-						const colPointX = ((this.position.x * otherBall.radius) + (otherBall.position.x * this.radius)) / (this.radius + otherBall.radius);
-						const colPointY = ((this.position.y * otherBall.radius) + (otherBall.position.y * this.radius)) / (this.radius + otherBall.radius);
+					// Preventing overlap
+					this.position.x = colPointX + this.radius * (this.position.x - otherBall.position.x) / d;
+					this.position.y = colPointY + this.radius * (this.position.y - otherBall.position.y) / d;
+					otherBall.position.x = colPointX + otherBall.radius * (otherBall.position.x - this.position.x) / d;
+					otherBall.position.y = colPointY + otherBall.radius * (otherBall.position.y - this.position.y) / d;
 
-						// stopping overlap
-						this.position.x = colPointX + this.radius * (this.position.x - otherBall.position.x) / d;
-						this.position.y = colPointY + this.radius * (this.position.y - otherBall.position.y) / d;
-						otherBall.position.x = colPointX + otherBall.radius * (otherBall.position.x - this.position.x) / d;
-						otherBall.position.y = colPointY + otherBall.radius * (otherBall.position.y - this.position.y) / d;
-
-						// updating velocity to reflect collision
-						this.velocity.x -= p * this.mass * nx;
-						this.velocity.y -= p * this.mass * ny;
-						otherBall.velocity.x += p * otherBall.mass * nx;
-						otherBall.velocity.y += p * otherBall.mass * ny;
-					}
+					// Updating velocity
+					this.velocity.x -= p * this.mass * nx;
+					this.velocity.y -= p * this.mass * ny;
+					otherBall.velocity.x += p * otherBall.mass * nx;
+					otherBall.velocity.y += p * otherBall.mass * ny;
 				}
 			}
 		}
+	}
+
+	public collidesWith(otherBall: Ball): boolean {
+		// AABBs
+		return this.position.x + this.radius + otherBall.radius > otherBall.position.x
+			&& this.position.x < otherBall.position.x + this.radius + otherBall.radius
+			&& this.position.y + this.radius + otherBall.radius > otherBall.position.y
+			&& this.position.y < otherBall.position.y + this.radius + otherBall.radius;
 	}
 
 	public samePositionAs(otherBall: Ball): boolean {
