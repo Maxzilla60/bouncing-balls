@@ -62,7 +62,7 @@ export default class BallApp {
 			if (!this.mouse.isDown || i < this.balls.length - 1) {
 				ball.tick(this.drag, this.density, this.gravity);
 			}
-			ball.collisionOtherBalls(this.balls);
+			ball.collisionOtherBalls(this.balls.filter(b => b.id !== ball.id));
 			ball.collisionWall(this.width, this.height);
 		}
 		this.render();

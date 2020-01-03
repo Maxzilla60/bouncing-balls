@@ -53,8 +53,8 @@ export default class Ball {
 	}
 
 	public collisionOtherBalls(otherBalls: Array<Ball>): void {
-		for (let otherBall of otherBalls) {
-			if (this.id !== otherBall.id) {
+		for (const otherBall of otherBalls) {
+			if (this.id !== otherBall.id && !this.samePositionAs(otherBall)) {
 				// quick check for potential collisions using AABBs
 				if (this.position.x + this.radius + otherBall.radius > otherBall.position.x
 					&& this.position.x < otherBall.position.x + this.radius + otherBall.radius
@@ -91,5 +91,10 @@ export default class Ball {
 				}
 			}
 		}
+	}
+
+	public samePositionAs(otherBall: Ball): boolean {
+		return this.position.x === otherBall.position.x &&
+			this.position.y === otherBall.position.y;
 	}
 }
