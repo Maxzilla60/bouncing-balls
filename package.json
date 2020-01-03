@@ -1,0 +1,13 @@
+{
+	"name": "ball-physics",
+	"version": "1.0.0",
+	"main": "index.html",
+	"scripts": {
+		"start": "parcel index.html"
+	},
+	"author": "Alexander Fernandes, Maxime Orione",
+	"devDependencies": {
+		"parcel": "^1.12.4",
+		"typescript": "^3.7.4"
+	}
+}
