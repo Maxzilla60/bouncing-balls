@@ -4,6 +4,11 @@ body {
 
 h1 {
 	margin-top: 15px;
+	margin-bottom: 0;
+}
+h3 {
+	margin: 0;
+	margin-bottom: 10px;
 }
 
 #range-inputs {
