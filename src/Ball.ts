@@ -5,7 +5,7 @@ import Point from './Point';
 export default class Ball {
 	public readonly id: number;
 	public readonly radius = 10;
-	public readonly color = 'blue';
+	public readonly color = Ball.randomColor();
 	public readonly mass = 10;
 	public velocity: Point = { x: 0, y: 0 };
 
@@ -17,6 +17,18 @@ export default class Ball {
 	constructor(position: Point, id: number) {
 		this.position = { ...position };
 		this.id = id;
+	}
+
+	public static randomColor(): string {
+		// https://colorhunt.co/palette/164029
+		const colorChoices = [
+			'#fa697c',
+			'#e13a9d',
+			'#9b45e4',
+			'#fcc169',
+		];
+		const randomIndex = Math.floor(Math.random() * colorChoices.length);
+		return colorChoices[randomIndex];
 	}
 
 	public tick(drag: number, density: number, gravity: number): void {
