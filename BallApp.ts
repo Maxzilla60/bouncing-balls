@@ -6,6 +6,28 @@ class Mouse extends Point {
 	public x = 0;
 	public y = 0;
 	public isDown = false;
+
+	constructor(canvas: HTMLCanvasElement) {
+		super();
+		canvas.addEventListener('mousemove', (event: MouseEvent) => {
+			this.x = event.pageX - canvas.offsetLeft;
+			this.y = event.pageY - canvas.offsetTop;
+		});
+		canvas.addEventListener('mousedown', (event: MouseEvent) => {
+			if (event.button === 0) {
+				this.isDown = true;
+			}
+		});
+		canvas.addEventListener('mouseup', (event: MouseEvent) => {
+			if (event.button === 0) {
+				this.isDown = false;
+			}
+		});
+	}
+
+	public toString(): string {
+		return `${this.isDown} {${this.x}, ${this.y}}`;
+	}
 }
 
 export default class BallApp {
@@ -15,7 +37,7 @@ export default class BallApp {
 	private readonly densityElement: HTMLInputElement;
 	private readonly dragElement: HTMLInputElement;
 	private timerID: number;
-	private mouse = new Mouse();
+	private mouse: Mouse;
 	private balls: Array<Ball> = [];
 
 	public constructor() {
@@ -27,9 +49,9 @@ export default class BallApp {
 	}
 
 	public start(): void {
+		this.mouse = new Mouse(this.canvas);
 		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
 		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
-		this.canvas.addEventListener('mousemove', this.setMousePositionForEvent.bind(this));
 		this.timerID = setInterval(this.loop.bind(this), TIMER_SPEED);
 	}
 
@@ -48,20 +70,12 @@ export default class BallApp {
 
 	private mouseDown(event: MouseEvent): void {
 		if (event.button === 0) {
-			this.setMousePositionForEvent(event);
-			this.mouse.isDown = true;
 			this.balls.push(new Ball(this.mouse, this.balls.length));
 		}
 	}
 
-	private setMousePositionForEvent(event: MouseEvent): void {
-		this.mouse.x = event.pageX - this.canvas.offsetLeft;
-		this.mouse.y = event.pageY - this.canvas.offsetTop;
-	}
-
 	private mouseUp(event: MouseEvent): void {
 		if (event.button === 0) {
-			this.mouse.isDown = false;
 			this.lastBall.velocity.x = (this.lastBall.position.x - this.mouse.x) / 10;
 			this.lastBall.velocity.y = (this.lastBall.position.y - this.mouse.y) / 10;
 		}
@@ -102,8 +116,8 @@ export default class BallApp {
 		this.ctx.fillText(`Number of Balls: ${this.balls.length}`, 0, 16);
 		this.ctx.fillText(`Drag Coefficient: ${this.drag}`, 0, 32);
 		this.ctx.fillText(`Fluid Density: ${this.density} kg/m^3`, 0, 48);
-		this.ctx.fillText(`Acceleration due to gravity: ${this.gravity * GRAVITY_ACCELERATION} g`, 0, 64);
-		this.ctx.fillText(`Mouse: ${this.mouse.isDown}`, 0, 80);
+		this.ctx.fillText(`Acceleration: ${this.gravity * GRAVITY_ACCELERATION} g`, 0, 64);
+		this.ctx.fillText(`Mouse: ${this.mouse}`, 0, 80);
 	}
 
 	private get lastBall(): Ball {
