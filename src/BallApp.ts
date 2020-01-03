@@ -113,7 +113,8 @@ export default class BallApp {
 
 	private renderSlingshot(): void {
 		this.ctx.beginPath();
-		this.ctx.strokeStyle = 'red';
+		this.ctx.lineWidth = 5;
+		this.ctx.strokeStyle = this.lastBall.color;
 		this.ctx.moveTo(this.lastBall.position.x, this.lastBall.position.y);
 		this.ctx.lineTo(this.mouse.x, this.mouse.y);
 		this.ctx.stroke();
