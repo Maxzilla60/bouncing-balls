@@ -38,7 +38,7 @@ export default class BallApp {
 	private readonly densityElement: HTMLInputElement;
 	private readonly dragElement: HTMLInputElement;
 
-	private readonly balls: Array<Ball> = [];
+	private balls: Array<Ball> = [];
 	private mouse: Mouse;
 
 	public constructor() {
@@ -53,6 +53,7 @@ export default class BallApp {
 		this.mouse = new Mouse(this.canvas);
 		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
 		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+		(document.getElementById('reset') as HTMLButtonElement).addEventListener('click', this.clearBalls.bind(this));
 		setInterval(this.loop.bind(this), TIMER_SPEED);
 	}
 
@@ -80,6 +81,10 @@ export default class BallApp {
 		if (event.button === 0) {
 			this.releaseSlingshot();
 		}
+	}
+
+	private clearBalls(): void {
+		this.balls = [];
 	}
 
 	private isPullingSlingshot(): boolean {
