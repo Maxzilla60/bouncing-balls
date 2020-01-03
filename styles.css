@@ -16,6 +16,12 @@ h4 {
 	font-weight: normal;
 }
 
+.glitchButton {
+	position: fixed;
+	right: 25;
+	top: 25;
+}
+
 #range-inputs {
 	display: -webkit-box;
 	display: -ms-flexbox;
