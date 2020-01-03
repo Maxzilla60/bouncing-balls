@@ -1,5 +1,5 @@
-import Ball from './Ball';
 import { GRAVITY_ACCELERATION, TIMER_SPEED } from './config';
+import Ball from './Ball';
 import Point from './Point';
 
 class Mouse extends Point {
