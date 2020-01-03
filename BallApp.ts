@@ -120,11 +120,11 @@ export default class BallApp {
 	private renderInfo(): void {
 		this.ctx.fillStyle = 'black';
 		this.ctx.font = '11pt monospace';
-		this.ctx.fillText(`Number of Balls: ${this.balls.length}`, 0, 16);
-		this.ctx.fillText(`Drag Coefficient: ${this.drag}`, 0, 32);
-		this.ctx.fillText(`Fluid Density: ${this.density} kg/m^3`, 0, 48);
-		this.ctx.fillText(`Acceleration: ${this.gravity * GRAVITY_ACCELERATION} g`, 0, 64);
-		this.ctx.fillText(`Mouse: ${this.mouse}`, 0, 80);
+		this.ctx.fillText(`Number of Balls: ${this.balls.length}`, 5, 16);
+		this.ctx.fillText(`Fluid Density: ${this.density} kg/m^3`, 5, 32);
+		this.ctx.fillText(`Acceleration: ${this.gravity * GRAVITY_ACCELERATION} g`, 5, 48);
+		this.ctx.fillText(`Drag Coefficient: ${this.drag}`, 5, 64);
+		this.ctx.fillText(`Mouse: ${this.mouse}`, 5, 80);
 	}
 
 	private get lastBall(): Ball {
