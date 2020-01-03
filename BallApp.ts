@@ -59,7 +59,7 @@ export default class BallApp {
 		this.ctx.clearRect(0, 0, this.width, this.height);
 		for (let i = 0; i < this.balls.length; i++) {
 			const ball = this.balls[i];
-			if (!this.mouse.isDown || i < this.balls.length - 1) {
+			if (!this.isPullingSlingshot() || i < this.balls.length - 1) {
 				ball.tick(this.drag, this.density, this.gravity);
 			}
 			ball.collisionOtherBalls(this.balls.filter(b => b.id !== ball.id));
@@ -76,14 +76,22 @@ export default class BallApp {
 
 	private mouseUp(event: MouseEvent): void {
 		if (event.button === 0) {
-			this.lastBall.velocity.x = (this.lastBall.position.x - this.mouse.x) / 10;
-			this.lastBall.velocity.y = (this.lastBall.position.y - this.mouse.y) / 10;
+			this.releaseSlingshot();
 		}
+	}
+
+	private isPullingSlingshot(): boolean {
+		return this.mouse.isDown;
+	}
+
+	private releaseSlingshot(): void {
+		this.lastBall.velocity.x = (this.lastBall.position.x - this.mouse.x) / 10;
+		this.lastBall.velocity.y = (this.lastBall.position.y - this.mouse.y) / 10;
 	}
 
 	private render(): void {
 		this.renderBalls();
-		if (this.mouse.isDown) {
+		if (this.isPullingSlingshot()) {
 			this.renderSlingshot();
 		}
 		this.renderInfo();
