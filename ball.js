@@ -53,6 +53,8 @@ var mouseUp = function (e) {
 	}
 }
 
+window.addEventListener('load', setup);
+
 function getMousePosition(e) {
 	mouse.x = e.pageX - canvas.offsetLeft;
 	mouse.y = e.pageY - canvas.offsetTop;
