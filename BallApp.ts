@@ -63,7 +63,7 @@ export default class BallApp {
 				ball.tick(this.drag, this.density, this.gravity);
 			}
 			ball.collisionOtherBalls(this.balls.filter(b => b.id !== ball.id));
-			ball.collisionWall(this.width, this.height);
+			ball.collisionWalls(this.width, this.height);
 		}
 		this.render();
 	}

@@ -33,7 +33,7 @@ export default class Ball {
 		this.position.y += this.velocity.y * FPS * 100;
 	}
 
-	public collisionWall(width: number, height: number): void {
+	public collisionWalls(width: number, height: number): void {
 		if (this.position.x > width - this.radius) {
 			this.velocity.x *= COLLISION_COEFFICIENT;
 			this.position.x = width - this.radius;
