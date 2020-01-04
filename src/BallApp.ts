@@ -35,6 +35,11 @@ class Mouse extends Point {
 			if (event.target === canvas) {
 				event.preventDefault();
 				this.isDown = true;
+				if (event.touches[0]) {
+					const touch = event.touches[0];
+					this.x = touch.pageX - canvas.offsetLeft;
+					this.y = touch.pageY - canvas.offsetTop;
+				}
 			}
 		}, false);
 		canvas.addEventListener('touchend', (event: TouchEvent) => {
@@ -93,11 +98,10 @@ export default class BallApp {
 	}
 
 	private mouseDown(event: MouseEvent | TouchEvent): void {
-		if (event instanceof MouseEvent && event.button === 0) {
+		if ((event instanceof MouseEvent && event.button === 0) ||
+			(event instanceof TouchEvent && event.target === this.canvas)) {
 			event.preventDefault();
 			this.balls.push(new Ball(this.mouse, this.balls.length));
-		} else if (event instanceof TouchEvent && event.target === this.canvas) {
-			event.preventDefault();
 		}
 	}
 
@@ -106,6 +110,7 @@ export default class BallApp {
 			this.releaseSlingshot();
 		} else if (event instanceof TouchEvent && event.target === this.canvas) {
 			event.preventDefault();
+			this.releaseSlingshot();
 		}
 	}
 
