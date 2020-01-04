@@ -12,6 +12,7 @@ export default class Mouse extends Point {
 		canvas.addEventListener('mousemove', this.handleMoveEvent.bind(this));
 		canvas.addEventListener('mousedown', this.handleStartEvent.bind(this));
 		canvas.addEventListener('mouseup', this.handleEndEvent.bind(this));
+		// http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
 		canvas.addEventListener('touchmove', this.handleMoveEvent.bind(this), false);
 		canvas.addEventListener('touchstart', this.handleStartEvent.bind(this), false);
 		canvas.addEventListener('touchend', this.handleEndEvent.bind(this), false);
