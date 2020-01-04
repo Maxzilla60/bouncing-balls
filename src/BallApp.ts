@@ -23,6 +23,19 @@ class Mouse extends Point {
 				this.isDown = false;
 			}
 		});
+		canvas.addEventListener('touchmove', (event: TouchEvent) => {
+			if (event.touches[0]) {
+				const touch = event.touches[0];
+				this.x = touch.pageX - canvas.offsetLeft;
+				this.y = touch.pageY - canvas.offsetTop;
+			}
+		});
+		canvas.addEventListener('touchstart', (event: TouchEvent) => {
+			this.isDown = true;
+		});
+		canvas.addEventListener('touchend', (event: TouchEvent) => {
+			this.isDown = false;
+		});
 	}
 
 	public toString(): string {
@@ -53,6 +66,8 @@ export default class BallApp {
 		this.mouse = new Mouse(this.canvas);
 		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
 		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+		this.canvas.addEventListener('touchstart', this.mouseDown.bind(this));
+		this.canvas.addEventListener('touchend', this.mouseUp.bind(this));
 		(document.getElementById('reset') as HTMLButtonElement).addEventListener('click', this.clearBalls.bind(this));
 		setInterval(this.loop.bind(this), TIMER_SPEED);
 	}
