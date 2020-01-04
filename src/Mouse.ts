@@ -4,51 +4,53 @@ export default class Mouse extends Point {
 	public x = 0;
 	public y = 0;
 	public isDown = false;
+	private readonly canvas: HTMLCanvasElement;
 
 	constructor(canvas: HTMLCanvasElement) {
 		super();
-		canvas.addEventListener('mousemove', (event: MouseEvent) => {
-			this.x = event.pageX - canvas.offsetLeft;
-			this.y = event.pageY - canvas.offsetTop;
-		});
-		canvas.addEventListener('mousedown', (event: MouseEvent) => {
-			if (event.button === 0) {
-				this.isDown = true;
-			}
-		});
-		canvas.addEventListener('mouseup', (event: MouseEvent) => {
-			if (event.button === 0) {
-				this.isDown = false;
-			}
-		});
-		canvas.addEventListener('touchmove', (event: TouchEvent) => {
-			if (event.target === canvas && event.touches[0]) {
-				event.preventDefault();
-				const touch = event.touches[0];
-				this.x = touch.pageX - canvas.offsetLeft;
-				this.y = touch.pageY - canvas.offsetTop;
-			}
-		}, false);
-		canvas.addEventListener('touchstart', (event: TouchEvent) => {
-			if (event.target === canvas) {
-				event.preventDefault();
-				this.isDown = true;
-				if (event.touches[0]) {
-					const touch = event.touches[0];
-					this.x = touch.pageX - canvas.offsetLeft;
-					this.y = touch.pageY - canvas.offsetTop;
-				}
-			}
-		}, false);
-		canvas.addEventListener('touchend', (event: TouchEvent) => {
-			if (event.target === canvas) {
-				event.preventDefault();
-				this.isDown = false;
-			}
-		}, false);
+		this.canvas = canvas;
+		canvas.addEventListener('mousemove', this.handleMoveEvent.bind(this));
+		canvas.addEventListener('mousedown', this.handleStartEvent.bind(this));
+		canvas.addEventListener('mouseup', this.handleEndEvent.bind(this));
+		canvas.addEventListener('touchmove', this.handleMoveEvent.bind(this), false);
+		canvas.addEventListener('touchstart', this.handleStartEvent.bind(this), false);
+		canvas.addEventListener('touchend', this.handleEndEvent.bind(this), false);
 	}
 
 	public toString(): string {
 		return `${this.isDown} {${this.x}, ${this.y}}`;
+	}
+
+	private updatePosition(event: MouseEvent | Touch): void {
+		this.x = event.pageX - this.canvas.offsetLeft;
+		this.y = event.pageY - this.canvas.offsetTop;
+	}
+
+	private handleMoveEvent(event: MouseEvent | TouchEvent): void {
+		if (event instanceof MouseEvent) {
+			this.updatePosition(event);
+		} else if (event instanceof TouchEvent && event.target === this.canvas && event.touches[0]) {
+			event.preventDefault();
+			this.updatePosition(event.touches[0]);
+		}
+	}
+
+	private handleStartEvent(event: MouseEvent | TouchEvent): void {
+		if (event instanceof MouseEvent && event.button === 0) {
+			this.isDown = true;
+		} else if (event instanceof TouchEvent && event.target === this.canvas && event.touches[0]) {
+			event.preventDefault();
+			this.isDown = true;
+			this.updatePosition(event.touches[0]);
+		}
+	}
+
+	private handleEndEvent(event: MouseEvent | TouchEvent): void {
+		if (event instanceof MouseEvent && event.button === 0) {
+			this.isDown = false;
+		} else if (event instanceof TouchEvent && event.target === this.canvas) {
+			event.preventDefault();
+			this.isDown = false;
+		}
 	}
 }
