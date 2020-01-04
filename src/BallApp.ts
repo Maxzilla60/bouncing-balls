@@ -24,18 +24,25 @@ class Mouse extends Point {
 			}
 		});
 		canvas.addEventListener('touchmove', (event: TouchEvent) => {
-			if (event.touches[0]) {
+			if (event.target === canvas && event.touches[0]) {
+				event.preventDefault();
 				const touch = event.touches[0];
 				this.x = touch.pageX - canvas.offsetLeft;
 				this.y = touch.pageY - canvas.offsetTop;
 			}
-		});
+		}, false);
 		canvas.addEventListener('touchstart', (event: TouchEvent) => {
-			this.isDown = true;
-		});
+			if (event.target === canvas) {
+				event.preventDefault();
+				this.isDown = true;
+			}
+		}, false);
 		canvas.addEventListener('touchend', (event: TouchEvent) => {
-			this.isDown = false;
-		});
+			if (event.target === canvas) {
+				event.preventDefault();
+				this.isDown = false;
+			}
+		}, false);
 	}
 
 	public toString(): string {
@@ -85,16 +92,20 @@ export default class BallApp {
 		this.render();
 	}
 
-	private mouseDown(event: MouseEvent): void {
-		if (event.button === 0) {
+	private mouseDown(event: MouseEvent | TouchEvent): void {
+		if (event instanceof MouseEvent && event.button === 0) {
 			event.preventDefault();
 			this.balls.push(new Ball(this.mouse, this.balls.length));
+		} else if (event instanceof TouchEvent && event.target === this.canvas) {
+			event.preventDefault();
 		}
 	}
 
-	private mouseUp(event: MouseEvent): void {
-		if (event.button === 0) {
+	private mouseUp(event: MouseEvent | TouchEvent): void {
+		if (event instanceof MouseEvent && event.button === 0) {
 			this.releaseSlingshot();
+		} else if (event instanceof TouchEvent && event.target === this.canvas) {
+			event.preventDefault();
 		}
 	}
 
