@@ -1,3 +1,4 @@
+import colorHunt from './ColorHuntService';
 import { COLLISION_COEFFICIENT, FPS, GRAVITY_ACCELERATION } from './config';
 import { getAccelerationX, getAccelerationY, getAerodynamicForce } from './physicsUtil';
 import Point from './Point';
@@ -20,15 +21,7 @@ export default class Ball {
 	}
 
 	public static randomColor(): string {
-		// https://colorhunt.co/palette/164029
-		const colorChoices = [
-			'#fa697c',
-			'#e13a9d',
-			'#9b45e4',
-			'#fcc169',
-		];
-		const randomIndex = Math.floor(Math.random() * colorChoices.length);
-		return colorChoices[randomIndex];
+		return colorHunt.getRandomColor();
 	}
 
 	public tick(drag: number, density: number, gravity: number): void {

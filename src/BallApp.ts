@@ -1,4 +1,5 @@
 import Ball from './Ball';
+import colorHunt from './ColorHuntService';
 import { GRAVITY_ACCELERATION, TIMER_SPEED } from './config';
 import Mouse from './Mouse';
 
@@ -21,13 +22,14 @@ export default class BallApp {
 		this.dragElement = document.getElementById('drag') as HTMLInputElement;
 	}
 
-	public start(): void {
+	public async start(): Promise<void> {
 		this.mouse = new Mouse(this.canvas);
 		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
 		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
 		this.canvas.addEventListener('touchstart', this.mouseDown.bind(this));
 		this.canvas.addEventListener('touchend', this.mouseUp.bind(this));
 		(document.getElementById('reset') as HTMLButtonElement).addEventListener('click', this.clearBalls.bind(this));
+		await colorHunt.init();
 		setInterval(this.loop.bind(this), TIMER_SPEED);
 	}
 

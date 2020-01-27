@@ -11,3 +11,8 @@ export function getAccelerationX(fx: number, ballMass: number): number {
 export function getAccelerationY(fy: number, mass: number, gravity: number): number {
 	return gravity + (fy / mass);
 }
+
+export function randomChoice<T>(array: Array<T>): T {
+	const randomIndex = Math.floor(Math.random() * array.length);
+	return array[randomIndex];
+}
